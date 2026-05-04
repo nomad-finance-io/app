@@ -1,0 +1,42 @@
+.slippage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+}
+
+.slippage-label {
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.slippage-presets {
+  display: inline-flex;
+  gap: var(--space-1);
+  padding: 0;
+  background: transparent;
+}
+
+.slippage-preset {
+  padding: 6px 12px;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--color-text);
+  background: var(--color-chip);
+  border-radius: var(--radius-pill);
+  transition:
+    color var(--duration-fast) var(--ease-out-expo),
+    background-color var(--duration-fast) var(--ease-out-expo);
+}
+
+.slippage-preset:hover:not(.is-active) {
+  background: var(--color-hover);
+}
+
+.slippage-preset.is-active {
+  color: var(--color-text-inverse);
+  background: var(--color-text);
+}

@@ -1,0 +1,34 @@
+.direction-rail {
+  position: relative;
+  height: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.direction-toggle {
+  position: absolute;
+  top: -22px;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-circle);
+  box-shadow: var(--shadow-floating);
+  transition:
+    transform var(--duration-normal) var(--ease-out-expo),
+    background-color var(--duration-fast) var(--ease-out-expo);
+}
+
+.direction-toggle:hover:not(:disabled) {
+  background: var(--color-hover-light);
+  transform: rotate(180deg);
+}
+
+.direction-toggle:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

@@ -1,0 +1,26 @@
+{
+  "name": "app-infra",
+  "version": "0.0.0",
+  "private": true,
+  "bin": {
+    "app-infra": "bin/app.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "synth": "cdk synth",
+    "diff": "cdk diff",
+    "deploy": "cdk deploy",
+    "destroy": "cdk destroy"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.2",
+    "aws-cdk": "^2.1018.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.6.3"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.180.0",
+    "constructs": "^10.4.2",
+    "source-map-support": "^0.5.21"
+  }
+}

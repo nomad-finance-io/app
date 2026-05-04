@@ -1,0 +1,15 @@
+.surface {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.surface--glass {
+  background: var(--color-surface);
+}
+
+.surface--flat {
+  background: var(--color-surface);
+  box-shadow: none;
+  border: 1px solid var(--color-border-soft);
+}

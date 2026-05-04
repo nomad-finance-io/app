@@ -1,0 +1,47 @@
+{
+  "name": "app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "generate:client": "node scripts/generate-client.mjs"
+  },
+  "dependencies": {
+    "@solana-program/token": "^0.13.0",
+    "@solana/kit": "^6.8.0",
+    "@solana/program-client-core": "^6.8.0",
+    "@tanstack/react-query": "^5.100.9",
+    "@wallet-ui/react": "^4.1.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-router": "^7.14.2"
+  },
+  "overrides": {
+    "@wallet-standard/react-core": "1.0.1",
+    "@wallet-standard/ui": "1.0.1",
+    "@wallet-standard/ui-compare": "1.0.1",
+    "@wallet-standard/ui-features": "1.0.1",
+    "@wallet-standard/ui-registry": "1.0.1"
+  },
+  "devDependencies": {
+    "@codama/nodes-from-anchor": "^1.4.1",
+    "@codama/renderers-js": "^2.2.0",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.12.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "codama": "^1.6.0",
+    "eslint": "^10.2.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.5.0",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.58.2",
+    "vite": "^8.0.10"
+  }
+}

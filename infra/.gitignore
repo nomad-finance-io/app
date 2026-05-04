@@ -1,0 +1,11 @@
+node_modules/
+
+# CDK
+cdk.out/
+.cdk.staging/
+
+# TypeScript build artifacts
+*.js
+*.d.ts
+*.tsbuildinfo
+!jest.config.js

@@ -1,0 +1,25 @@
+.pool-frame {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.pool-frame-card {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.pool-frame-state {
+  padding: var(--space-6);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.pool-frame-error {
+  color: var(--color-danger);
+}
