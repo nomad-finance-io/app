@@ -4,9 +4,9 @@ import {
   createNoopSigner,
   createTransactionMessage,
   getBase64EncodedWireTransaction,
+  partiallySignTransactionMessageWithSigners,
   setTransactionMessageFeePayerSigner,
   setTransactionMessageLifetimeUsingBlockhash,
-  signTransactionMessageWithSigners,
   type Address,
   type Instruction,
   type TransactionSigner,
@@ -202,8 +202,20 @@ export async function quoteSwap({
     return appendTransactionMessageInstruction(ix, m3);
   })();
 
-  const signed = await signTransactionMessageWithSigners(message);
+  const signed = await partiallySignTransactionMessageWithSigners(message);
   const wire = getBase64EncodedWireTransaction(signed);
+
+  // eslint-disable-next-line no-console
+  console.groupCollapsed(
+    `[quoteSwap] ${direction} amountIn=${amountIn} pool=${pool.poolStateAddress}`,
+  );
+  // eslint-disable-next-line no-console
+  console.log('wire (base64):', wire);
+  // eslint-disable-next-line no-console
+  console.log(
+    'inspect:',
+    `https://explorer.solana.com/tx/inspector?message=${encodeURIComponent(wire)}`,
+  );
 
   const sim = await rpc
     .simulateTransaction(wire, {
@@ -215,6 +227,12 @@ export async function quoteSwap({
     .send();
 
   const logs = sim.value.logs ?? [];
+  // eslint-disable-next-line no-console
+  console.log('err:', sim.value.err);
+  // eslint-disable-next-line no-console
+  console.log('logs:', logs);
+  // eslint-disable-next-line no-console
+  console.groupEnd();
   if (sim.value.err) {
     const reason = describeSimError(sim.value.err, logs);
     throw new QuoteError(reason, logs);
@@ -244,6 +262,9 @@ function describeSimError(err: unknown, logs: readonly string[]): string {
     }
     if (lastLog.includes('insufficient funds')) {
       return 'Insufficient input balance';
+    }
+    if (lastLog.includes('ZeroTradingTokens')) {
+      return 'Amount too small — increase the input or the pool has insufficient liquidity';
     }
     return lastLog.replace(/^Program log: /, '').slice(0, 160);
   }
