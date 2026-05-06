@@ -4,6 +4,7 @@ import { TOKEN_PROGRAM_ADDRESS } from '@solana-program/token';
 import type { UiWalletAccount } from '@wallet-standard/react';
 import { Button } from '../ui/Button';
 import { TokenInput } from '../ui/TokenInput';
+import { TransactionSignatureLink } from '../ui/TransactionSignatureLink';
 import { SlippageControl } from '../swap/SlippageControl';
 import { useTokenBalance } from '../../hooks/useTokenBalance';
 import { useSubmitDeposit } from '../../hooks/useSubmitDeposit';
@@ -330,7 +331,7 @@ function AddLiquidityForm({
 
       {submit.data && (
         <p className="swap-success" role="status">
-          Deposit sent · signature {submit.data.slice(0, 8)}…{submit.data.slice(-8)}
+          Deposit sent · <TransactionSignatureLink signature={submit.data} />
         </p>
       )}
 
@@ -455,7 +456,7 @@ function RemoveLiquidityForm({
 
       {submit.data && (
         <p className="swap-success" role="status">
-          Withdraw sent · signature {submit.data.slice(0, 8)}…{submit.data.slice(-8)}
+          Withdraw sent · <TransactionSignatureLink signature={submit.data} />
         </p>
       )}
 

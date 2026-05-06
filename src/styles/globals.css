@@ -40,6 +40,15 @@ a {
   text-decoration: none;
 }
 
+.transaction-signature-link {
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.transaction-signature-link:hover {
+  opacity: 0.72;
+}
+
 button {
   font: inherit;
   color: inherit;

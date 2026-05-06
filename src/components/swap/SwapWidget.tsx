@@ -4,6 +4,7 @@ import type { UiWalletAccount } from '@wallet-standard/react';
 import type { Address } from '@solana/kit';
 import { Button } from '../ui/Button';
 import { TokenInput } from '../ui/TokenInput';
+import { TransactionSignatureLink } from '../ui/TransactionSignatureLink';
 import { DirectionToggle } from './DirectionToggle';
 import { SlippageControl } from './SlippageControl';
 import { useDebounced } from '../../hooks/useDebounced';
@@ -186,7 +187,7 @@ function SwapWidgetConnected({
 
       {submit.data && (
         <p className="swap-success" role="status">
-          Swap sent · signature {submit.data.slice(0, 8)}…{submit.data.slice(-8)}
+          Swap sent · <TransactionSignatureLink signature={submit.data} />
         </p>
       )}
 

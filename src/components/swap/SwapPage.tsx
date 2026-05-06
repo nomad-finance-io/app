@@ -7,7 +7,6 @@ export function SwapPage() {
   return (
     <section className="swap-page" aria-labelledby="swap-heading">
       <header className="page-header">
-        <p className="page-eyebrow">Trade</p>
         <h1 id="swap-heading" className="page-title">
           Swap
         </h1>

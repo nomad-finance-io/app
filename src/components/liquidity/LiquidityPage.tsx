@@ -7,7 +7,6 @@ export function LiquidityPage() {
   return (
     <section className="swap-page" aria-labelledby="liquidity-heading">
       <header className="page-header">
-        <p className="page-eyebrow">Provide</p>
         <h1 id="liquidity-heading" className="page-title">
           Liquidity
         </h1>
