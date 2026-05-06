@@ -18,8 +18,8 @@ export function NavBar() {
               src="/logo.jpeg"
               alt=""
               className="brand-mark-img"
-              width={28}
-              height={28}
+              width={32}
+              height={32}
             />
             <span className="brand-wordmark">Nomad</span>
           </NavLink>

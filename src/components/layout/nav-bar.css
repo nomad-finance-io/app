@@ -4,7 +4,7 @@
   z-index: 50;
   height: var(--nav-height);
   background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-chip);
 }
 
 .nav-inner {
@@ -33,17 +33,18 @@
 
 .brand-mark-img {
   display: block;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-sm, 6px);
-  object-fit: cover;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  object-fit: contain;
+  background: var(--color-text);
 }
 
 .brand-wordmark {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: 700;
-  letter-spacing: var(--tracking-display);
+  letter-spacing: -0.01em;
   line-height: 1;
   color: var(--color-text);
 }
