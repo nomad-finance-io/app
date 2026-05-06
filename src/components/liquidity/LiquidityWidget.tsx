@@ -9,16 +9,23 @@ import { useTokenBalance } from '../../hooks/useTokenBalance';
 import { useSubmitDeposit } from '../../hooks/useSubmitDeposit';
 import { useSubmitWithdraw } from '../../hooks/useSubmitWithdraw';
 import type { PoolView } from '../../hooks/usePool';
-import { lpTokensToTradingTokens } from '../../lib/liquidity-math';
+import { lpTokensToTradingTokens, tradingTokensToLpTokens } from '../../lib/liquidity-math';
 import { applySlippageMax, applySlippageMin } from '../../lib/slippage';
 import { formatTokenAmount, parseTokenAmount } from '../../lib/format';
 import { getTokenMeta } from '../../solana/tokens';
 import './liquidity-widget.css';
 
 type Mode = 'add' | 'remove';
+type LiquidityInputSide = 'token0' | 'token1';
 
 interface LiquidityWidgetProps {
   pool: PoolView;
+}
+
+interface AddLiquidityQuote {
+  lpAmount: bigint;
+  token0Amount: bigint;
+  token1Amount: bigint;
 }
 
 export function LiquidityWidget({ pool }: LiquidityWidgetProps) {
@@ -72,6 +79,69 @@ function LiquidityWidgetConnected({
   );
 }
 
+function formatInputAmount(raw: bigint, decimals: number): string {
+  return formatTokenAmount(raw, decimals, { maxFractionDigits: decimals }).replace(/,/g, '');
+}
+
+function quoteAddLiquidity(
+  pool: PoolView,
+  side: LiquidityInputSide,
+  sourceAmount: bigint,
+): AddLiquidityQuote | null {
+  if (sourceAmount <= 0n || pool.state.lpSupply === 0n) {
+    return null;
+  }
+
+  const totalSource = side === 'token0' ? pool.netToken0 : pool.netToken1;
+  const lpAmount = tradingTokensToLpTokens(sourceAmount, pool.state.lpSupply, totalSource, 'floor');
+  if (lpAmount <= 0n) {
+    return null;
+  }
+
+  const split = lpTokensToTradingTokens(
+    lpAmount,
+    pool.state.lpSupply,
+    pool.netToken0,
+    pool.netToken1,
+    'ceil',
+  );
+  return {
+    lpAmount,
+    token0Amount: split.token0Amount,
+    token1Amount: split.token1Amount,
+  };
+}
+
+function findMaxAddLiquiditySourceAmount(
+  pool: PoolView,
+  side: LiquidityInputSide,
+  sourceBalance: bigint,
+  token0Balance: bigint,
+  token1Balance: bigint,
+): bigint {
+  if (sourceBalance <= 0n || token0Balance <= 0n || token1Balance <= 0n) {
+    return 0n;
+  }
+
+  let low = 0n;
+  let high = sourceBalance;
+
+  while (low < high) {
+    const mid = (low + high + 1n) / 2n;
+    const quote = quoteAddLiquidity(pool, side, mid);
+    const canCover =
+      quote != null && quote.token0Amount <= token0Balance && quote.token1Amount <= token1Balance;
+
+    if (canCover) {
+      low = mid;
+    } else {
+      high = mid - 1n;
+    }
+  }
+
+  return low;
+}
+
 function AddLiquidityForm({
   pool,
   account,
@@ -79,28 +149,49 @@ function AddLiquidityForm({
   pool: PoolView;
   account: UiWalletAccount;
 }) {
-  const [lpAmountText, setLpAmountText] = useState('');
-  const [slippageBps, setSlippageBps] = useState(50);
+  const [token0AmountText, setToken0AmountText] = useState('');
+  const [token1AmountText, setToken1AmountText] = useState('');
+  const [lastEdited, setLastEdited] = useState<LiquidityInputSide>('token0');
 
+  const token0Decimals = pool.state.mint0Decimals;
+  const token1Decimals = pool.state.mint1Decimals;
   const lpDecimals = pool.state.lpMintDecimals;
-  const lpAmount = useMemo(
-    () => parseTokenAmount(lpAmountText, lpDecimals),
-    [lpAmountText, lpDecimals],
+  const sourceAmountText = lastEdited === 'token0' ? token0AmountText : token1AmountText;
+  const sourceDecimals = lastEdited === 'token0' ? token0Decimals : token1Decimals;
+  const sourceAmount = useMemo(
+    () => parseTokenAmount(sourceAmountText, sourceDecimals),
+    [sourceAmountText, sourceDecimals],
   );
 
-  const split = useMemo(() => {
-    if (!lpAmount || lpAmount <= 0n) return null;
-    return lpTokensToTradingTokens(
-      lpAmount,
-      pool.state.lpSupply,
-      pool.netToken0,
-      pool.netToken1,
-      'ceil',
-    );
-  }, [lpAmount, pool]);
+  const quote = useMemo(() => {
+    if (!sourceAmount || sourceAmount <= 0n) return null;
+    return quoteAddLiquidity(pool, lastEdited, sourceAmount);
+  }, [lastEdited, pool, sourceAmount]);
 
   const token0Meta = getTokenMeta(pool.config.token0Mint);
   const token1Meta = getTokenMeta(pool.config.token1Mint);
+
+  const displayedToken0AmountText =
+    lastEdited === 'token0'
+      ? token0AmountText
+      : quote
+        ? formatInputAmount(quote.token0Amount, token0Decimals)
+        : '';
+  const displayedToken1AmountText =
+    lastEdited === 'token1'
+      ? token1AmountText
+      : quote
+        ? formatInputAmount(quote.token1Amount, token1Decimals)
+        : '';
+
+  const maximumToken0Amount = useMemo(
+    () => parseTokenAmount(displayedToken0AmountText, token0Decimals),
+    [displayedToken0AmountText, token0Decimals],
+  );
+  const maximumToken1Amount = useMemo(
+    () => parseTokenAmount(displayedToken1AmountText, token1Decimals),
+    [displayedToken1AmountText, token1Decimals],
+  );
 
   const token0Balance = useTokenBalance({
     mint: pool.config.token0Mint,
@@ -110,33 +201,72 @@ function AddLiquidityForm({
     mint: pool.config.token1Mint,
     tokenProgram: pool.state.token1Program,
   });
+  const token0BalanceAmount = token0Balance.data ?? 0n;
+  const token1BalanceAmount = token1Balance.data ?? 0n;
+
+  const maxToken0SourceAmount = useMemo(
+    () =>
+      findMaxAddLiquiditySourceAmount(
+        pool,
+        'token0',
+        token0BalanceAmount,
+        token0BalanceAmount,
+        token1BalanceAmount,
+      ),
+    [pool, token0BalanceAmount, token1BalanceAmount],
+  );
+  const maxToken1SourceAmount = useMemo(
+    () =>
+      findMaxAddLiquiditySourceAmount(
+        pool,
+        'token1',
+        token1BalanceAmount,
+        token0BalanceAmount,
+        token1BalanceAmount,
+      ),
+    [pool, token0BalanceAmount, token1BalanceAmount],
+  );
 
   const submit = useSubmitDeposit(account);
 
   const insufficient0 =
-    split && token0Balance.data != null
-      ? applySlippageMax(split.token0Amount, slippageBps) > token0Balance.data
+    maximumToken0Amount != null && token0Balance.data != null
+      ? maximumToken0Amount > token0Balance.data
       : false;
   const insufficient1 =
-    split && token1Balance.data != null
-      ? applySlippageMax(split.token1Amount, slippageBps) > token1Balance.data
+    maximumToken1Amount != null && token1Balance.data != null
+      ? maximumToken1Amount > token1Balance.data
       : false;
 
   const onSubmit = () => {
-    if (!split || !lpAmount) return;
+    if (!quote || !maximumToken0Amount || !maximumToken1Amount) return;
     submit.mutate({
       pool,
-      lpTokenAmount: lpAmount,
-      maximumToken0Amount: applySlippageMax(split.token0Amount, slippageBps),
-      maximumToken1Amount: applySlippageMax(split.token1Amount, slippageBps),
+      lpTokenAmount: quote.lpAmount,
+      maximumToken0Amount,
+      maximumToken1Amount,
     });
   };
 
+  const onToken0Max = () => {
+    setLastEdited('token0');
+    setToken0AmountText(formatInputAmount(maxToken0SourceAmount, token0Decimals));
+  };
+
+  const onToken1Max = () => {
+    setLastEdited('token1');
+    setToken1AmountText(formatInputAmount(maxToken1SourceAmount, token1Decimals));
+  };
+
+  const hasSourceInput = sourceAmountText.trim().length > 0;
+  const invalidSourceAmount = hasSourceInput && sourceAmount == null;
+  const amountTooSmall = hasSourceInput && sourceAmount != null && sourceAmount > 0n && !quote;
+
   const disabled =
     pool.depositDisabled ||
-    !lpAmount ||
-    lpAmount <= 0n ||
-    !split ||
+    !quote ||
+    !maximumToken0Amount ||
+    !maximumToken1Amount ||
     submit.isPending ||
     insufficient0 ||
     insufficient1 ||
@@ -146,6 +276,10 @@ function AddLiquidityForm({
     ? 'Deposit disabled'
     : pool.state.lpSupply === 0n
       ? 'Pool not initialized'
+      : invalidSourceAmount
+        ? 'Invalid amount'
+        : amountTooSmall
+          ? 'Amount too small'
       : insufficient0
         ? `Insufficient ${token0Meta.symbol}`
         : insufficient1
@@ -157,29 +291,36 @@ function AddLiquidityForm({
   return (
     <div className="liquidity-form">
       <TokenInput
-        label="LP shares to mint"
-        token={{
-          mint: pool.state.lpMint,
-          symbol: 'LP',
-          name: `${pool.config.label} LP`,
+        label={`${token0Meta.symbol} to provide`}
+        token={token0Meta}
+        decimals={token0Decimals}
+        amountText={displayedToken0AmountText}
+        onChange={(next) => {
+          setLastEdited('token0');
+          setToken0AmountText(next);
         }}
-        decimals={lpDecimals}
-        amountText={lpAmountText}
-        onChange={setLpAmountText}
+        balance={token0Balance.data ?? null}
+        onMax={maxToken0SourceAmount > 0n ? onToken0Max : undefined}
       />
 
-      <LiquiditySplit
-        title="You deposit"
-        token0Symbol={token0Meta.symbol}
-        token1Symbol={token1Meta.symbol}
-        token0Decimals={pool.state.mint0Decimals}
-        token1Decimals={pool.state.mint1Decimals}
-        split={split}
-        slippageBps={slippageBps}
-        mode="ceil"
+      <TokenInput
+        label={`${token1Meta.symbol} to provide`}
+        token={token1Meta}
+        decimals={token1Decimals}
+        amountText={displayedToken1AmountText}
+        onChange={(next) => {
+          setLastEdited('token1');
+          setToken1AmountText(next);
+        }}
+        balance={token1Balance.data ?? null}
+        onMax={maxToken1SourceAmount > 0n ? onToken1Max : undefined}
       />
 
-      <SlippageControl bps={slippageBps} onChange={setSlippageBps} />
+      <LiquidityMintPreview
+        lpAmount={quote?.lpAmount ?? null}
+        lpDecimals={lpDecimals}
+        poolLabel={pool.config.label}
+      />
 
       {submit.error instanceof Error && (
         <p className="swap-error" role="alert">
@@ -334,6 +475,32 @@ interface LiquiditySplitProps {
   split: { token0Amount: bigint; token1Amount: bigint } | null;
   slippageBps: number;
   mode: 'ceil' | 'floor';
+}
+
+function LiquidityMintPreview({
+  lpAmount,
+  lpDecimals,
+  poolLabel,
+}: {
+  lpAmount: bigint | null;
+  lpDecimals: number;
+  poolLabel: string;
+}) {
+  return (
+    <div className="liquidity-split">
+      <p className="liquidity-split-title">You mint</p>
+      <div className="liquidity-split-rows">
+        <div>
+          <span>{poolLabel} LP</span>
+          <span>
+            {lpAmount != null
+              ? formatTokenAmount(lpAmount, lpDecimals, { maxFractionDigits: 6 })
+              : '—'}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function LiquiditySplit({

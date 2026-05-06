@@ -15,6 +15,19 @@ export interface TokenSplit {
   token1Amount: bigint;
 }
 
+export function tradingTokensToLpTokens(
+  tokenAmount: bigint,
+  lpSupply: bigint,
+  totalToken: bigint,
+  round: RoundDirection,
+): bigint {
+  if (totalToken === 0n) {
+    return 0n;
+  }
+  const div = round === 'ceil' ? ceilDiv : floorDiv;
+  return div(tokenAmount * lpSupply, totalToken);
+}
+
 /**
  * Mirrors `CurveCalculator::lp_tokens_to_trading_tokens` from the on-chain
  * curve module. Used for both deposit (round = 'ceil') and withdraw (round =

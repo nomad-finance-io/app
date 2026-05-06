@@ -15,7 +15,7 @@ export function PoolFrame({ children }: PoolFrameProps) {
 
   return (
     <div className="pool-frame">
-      <PairSelector value={selected} onChange={setSelected} />
+      {POOLS.length !== 1 && <PairSelector value={selected} onChange={setSelected} />}
       {selected && (
         <Surface className="pool-frame-card">
           {query.isLoading && <div className="pool-frame-state">Loading pool…</div>}
