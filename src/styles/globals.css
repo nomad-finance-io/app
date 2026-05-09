@@ -24,13 +24,16 @@ html {
 }
 
 body {
+  position: relative;
   font-family: var(--font-sans);
   font-size: var(--text-base);
   color: var(--color-text);
-  background: var(--color-bg);
+  background: #ffffff;
+  overflow-x: hidden;
 }
 
 #root {
+  position: relative;
   display: flex;
   flex-direction: column;
 }
@@ -42,11 +45,12 @@ a {
 
 .transaction-signature-link {
   text-decoration: underline;
-  text-underline-offset: 0.12em;
+  text-underline-offset: 0.16em;
+  color: var(--color-link);
 }
 
 .transaction-signature-link:hover {
-  opacity: 0.72;
+  opacity: 0.8;
 }
 
 button {
@@ -71,9 +75,10 @@ h3,
 h4 {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: var(--tracking-display);
   line-height: var(--leading-tight);
+  color: var(--color-text);
 }
 
 p {
@@ -81,12 +86,19 @@ p {
 }
 
 ::selection {
-  background: var(--color-text);
+  background: var(--color-solana-purple);
   color: var(--color-text-inverse);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-text);
+  outline: 2px solid var(--color-solana-purple);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
+}
+
+.tech,
+code,
+kbd,
+samp {
+  font-family: var(--font-tech);
 }

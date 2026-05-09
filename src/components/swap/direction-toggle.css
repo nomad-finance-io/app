@@ -13,19 +13,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-text);
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
+  color: var(--color-text-inverse);
+  background: var(--gradient-accent);
+  border: 2px solid rgba(255, 255, 255, 0.9);
   border-radius: var(--radius-circle);
-  box-shadow: var(--shadow-floating);
+  box-shadow: 0 12px 28px -10px rgba(153, 69, 255, 0.5);
   transition:
     transform var(--duration-normal) var(--ease-out-expo),
-    background-color var(--duration-fast) var(--ease-out-expo);
+    box-shadow var(--duration-fast) var(--ease-out-expo);
 }
 
 .direction-toggle:hover:not(:disabled) {
-  background: var(--color-hover-light);
   transform: rotate(180deg);
+  box-shadow: 0 16px 36px -10px rgba(153, 69, 255, 0.65);
 }
 
 .direction-toggle:disabled {

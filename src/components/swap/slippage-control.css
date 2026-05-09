@@ -7,10 +7,11 @@
 }
 
 .slippage-label {
-  font-weight: 700;
+  font-family: var(--font-tech);
+  font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-text);
+  color: var(--color-text-muted);
 }
 
 .slippage-presets {
@@ -21,10 +22,11 @@
 }
 
 .slippage-preset {
-  padding: 6px 12px;
+  padding: 6px 14px;
+  font-family: var(--font-tech);
   font-size: var(--text-xs);
-  font-weight: 500;
-  color: var(--color-text);
+  font-weight: 600;
+  color: var(--color-text-muted);
   background: var(--color-chip);
   border-radius: var(--radius-pill);
   transition:
@@ -33,10 +35,12 @@
 }
 
 .slippage-preset:hover:not(.is-active) {
-  background: var(--color-hover);
+  color: var(--color-text);
+  background: var(--color-chip-strong);
 }
 
 .slippage-preset.is-active {
   color: var(--color-text-inverse);
-  background: var(--color-text);
+  background: var(--gradient-accent);
+  box-shadow: 0 6px 14px -6px rgba(153, 69, 255, 0.5);
 }

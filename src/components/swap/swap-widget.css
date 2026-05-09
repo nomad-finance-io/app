@@ -5,27 +5,29 @@
 }
 
 .swap-widget > .btn {
-  margin-top: var(--space-2);
+  margin-top: var(--space-3);
   width: 100%;
 }
 
 .swap-cta-card {
   padding: var(--space-8) var(--space-6);
   text-align: center;
-  background: var(--color-chip);
+  background: var(--color-surface-soft);
+  border: 1px dashed var(--color-border-soft);
   border-radius: var(--radius-md);
 }
 
 .swap-cta-title {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 700;
+  font-size: var(--text-2xl);
+  font-weight: 400;
   letter-spacing: var(--tracking-tight);
   color: var(--color-text);
   margin-bottom: var(--space-2);
 }
 
 .swap-cta-help {
+  font-family: var(--font-sans);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
@@ -35,9 +37,11 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3) var(--space-6);
-  padding: var(--space-3) var(--space-5);
-  background: var(--color-chip);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-accent-soft);
+  border: 1px solid rgba(153, 69, 255, 0.18);
   border-radius: var(--radius-md);
+  font-family: var(--font-tech);
   font-variant-numeric: tabular-nums;
 }
 
@@ -49,7 +53,8 @@
 }
 
 .quote-summary dt {
-  font-weight: 700;
+  font-family: var(--font-tech);
+  font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-text-muted);
@@ -57,25 +62,29 @@
 
 .quote-summary dd {
   margin: 0;
+  font-family: var(--font-tech);
   font-size: var(--text-sm);
+  font-weight: 600;
   color: var(--color-text);
 }
 
 .swap-error {
   padding: var(--space-3) var(--space-4);
+  font-family: var(--font-sans);
   font-size: var(--text-sm);
   color: var(--color-danger);
-  background: var(--color-bg);
-  border: 1px solid var(--color-danger);
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.3);
   border-radius: var(--radius-md);
 }
 
 .swap-success {
   padding: var(--space-3) var(--space-4);
+  font-family: var(--font-tech);
   font-size: var(--text-sm);
   color: var(--color-text);
-  background: var(--color-chip);
-  border: 1px solid var(--color-border);
+  background: var(--color-accent-secondary-soft);
+  border: 1px solid rgba(20, 241, 149, 0.32);
   border-radius: var(--radius-md);
   font-variant-numeric: tabular-nums;
 }

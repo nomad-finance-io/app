@@ -1,15 +1,35 @@
 .surface {
-  background: var(--color-surface);
+  position: relative;
+  background: #ffffff;
+  border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(248, 250, 252, 0) 38%,
+    rgba(248, 250, 252, 0.6) 100%
+  );
+  z-index: -1;
 }
 
 .surface--glass {
-  background: var(--color-surface);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
 }
 
 .surface--flat {
-  background: var(--color-surface);
+  background: #ffffff;
   box-shadow: none;
   border: 1px solid var(--color-border-soft);
 }

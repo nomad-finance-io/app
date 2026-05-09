@@ -1,62 +1,101 @@
 :root {
   color-scheme: light;
 
-  /* Palette — Uber-inspired strict black & white */
-  --color-bg: #ffffff;
-  --color-bg-elevated: #ffffff;
-  --color-surface: #ffffff;
+  /* Solana brand */
+  --color-solana-purple: #9945ff;
+  --color-solana-purple-strong: #7d27e6;
+  --color-solana-green: #14f195;
+  --color-solana-green-strong: #06c977;
+
+  /* Glow alpha sources used to layer the gradient field */
+  --glow-purple: rgba(153, 69, 255, 0.62);
+  --glow-green: rgba(20, 241, 149, 0.56);
+  --glow-purple-soft: rgba(153, 69, 255, 0.22);
+  --glow-green-soft: rgba(20, 241, 149, 0.2);
+
+  /* Base background — white/slate gradient */
+  --bg-base: linear-gradient(135deg, #ffffff, #f8fafc);
+
+  /* Surfaces — semi-transparent white over slate */
+  --color-surface: rgba(255, 255, 255, 0.72);
+  --color-surface-strong: rgba(255, 255, 255, 0.86);
+  --color-surface-soft: rgba(255, 255, 255, 0.55);
   --color-surface-solid: #ffffff;
+  --color-surface-inset: rgba(248, 250, 252, 0.78);
 
-  --color-chip: #efefef;
-  --color-hover: #e2e2e2;
-  --color-hover-light: #f3f3f3;
-  --color-pressed: rgba(0, 0, 0, 0.08);
+  --color-bg: transparent;
+  --color-bg-elevated: rgba(255, 255, 255, 0.78);
 
-  --color-border: #000000;
-  --color-border-soft: rgba(0, 0, 0, 0.12);
+  --color-chip: rgba(15, 23, 42, 0.06);
+  --color-chip-strong: rgba(15, 23, 42, 0.1);
+  --color-hover: rgba(15, 23, 42, 0.08);
+  --color-hover-light: rgba(15, 23, 42, 0.04);
+  --color-pressed: rgba(15, 23, 42, 0.12);
 
-  --color-text: #000000;
-  --color-text-muted: #4b4b4b;
-  --color-text-subtle: #afafaf;
+  /* Borders — soft, low contrast */
+  --color-border: rgba(15, 23, 42, 0.12);
+  --color-border-soft: rgba(15, 23, 42, 0.08);
+  --color-border-strong: rgba(15, 23, 42, 0.2);
+
+  /* Text */
+  --color-text: #0f172a;
+  --color-text-muted: #475569;
+  --color-text-subtle: #94a3b8;
   --color-text-inverse: #ffffff;
 
-  /* Functional colors — kept neutral within the chrome.
-     "Accent" maps to black so primary-action affordances stay monochrome. */
-  --color-accent: #000000;
-  --color-accent-strong: #000000;
-  --color-accent-soft: rgba(0, 0, 0, 0.06);
+  /* Accents */
+  --color-accent: var(--color-solana-purple);
+  --color-accent-strong: var(--color-solana-purple-strong);
+  --color-accent-soft: rgba(153, 69, 255, 0.12);
 
-  --color-link: #0000ee;
-  --color-positive: #000000;
-  --color-warning: #000000;
-  --color-danger: #b00020;
+  --color-accent-secondary: var(--color-solana-green);
+  --color-accent-secondary-strong: var(--color-solana-green-strong);
+  --color-accent-secondary-soft: rgba(20, 241, 149, 0.14);
 
-  /* Typography — Inter as the closest substitute for UberMove */
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
-    'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --font-display: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
-    'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Consolas, monospace;
+  --gradient-accent: linear-gradient(
+    135deg,
+    var(--color-solana-purple) 0%,
+    var(--color-solana-green) 100%
+  );
+  --gradient-accent-strong: linear-gradient(
+    135deg,
+    var(--color-solana-purple-strong) 0%,
+    var(--color-solana-green-strong) 100%
+  );
 
-  --text-xs: 0.75rem;       /* 12 — micro */
-  --text-sm: 0.875rem;      /* 14 — caption */
-  --text-base: 1rem;        /* 16 — body / button */
-  --text-lg: 1.125rem;      /* 18 — nav / UI large */
-  --text-xl: 1.25rem;       /* 20 — small heading */
-  --text-2xl: 1.5rem;       /* 24 — sub-heading */
-  --text-3xl: 2rem;         /* 32 — card title */
-  --text-4xl: 2.25rem;      /* 36 — section heading */
-  --text-display: 3.25rem;  /* 52 — hero */
+  --color-link: var(--color-solana-purple-strong);
+  --color-positive: var(--color-solana-green-strong);
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
 
-  --leading-tight: 1.22;
-  --leading-snug: 1.33;
-  --leading-normal: 1.5;
+  /* Typography */
+  --font-display: 'DM Serif Display', 'Times New Roman', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system,
+    BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-tech: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  --font-mono: 'Space Grotesk', ui-monospace, 'SF Mono', 'JetBrains Mono',
+    Consolas, monospace;
 
-  --tracking-display: 0;
-  --tracking-tight: 0;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+  --text-4xl: 3rem;
+  --text-display: 4rem;
+
+  --leading-tight: 1.08;
+  --leading-snug: 1.28;
+  --leading-normal: 1.55;
+
+  --tracking-display: -0.02em;
+  --tracking-tight: -0.01em;
   --tracking-wide: 0.04em;
 
-  /* Spacing — 8px base */
+  /* Spacing */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -69,30 +108,35 @@
   --space-16: 4rem;
   --space-20: 5rem;
 
-  /* Radius */
-  --radius-sm: 8px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  /* Radius — generous, glassy */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+  --radius-xl: 36px;
   --radius-pill: 999px;
   --radius-circle: 50%;
 
-  /* Elevation — whisper-soft, never decorative */
-  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.12);
-  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.16);
-  --shadow-floating: 0 2px 8px rgba(0, 0, 0, 0.16);
-  --shadow-pressed: inset 0 0 0 999px rgba(0, 0, 0, 0.08);
+  /* Shadows — large blurred, low alpha */
+  --shadow-card: 0 30px 80px -32px rgba(15, 23, 42, 0.28),
+    0 8px 24px -10px rgba(15, 23, 42, 0.12);
+  --shadow-medium: 0 18px 40px -18px rgba(15, 23, 42, 0.22),
+    0 4px 12px -6px rgba(15, 23, 42, 0.1);
+  --shadow-floating: 0 12px 28px -10px rgba(15, 23, 42, 0.2);
+  --shadow-glow-purple: 0 30px 80px -28px rgba(153, 69, 255, 0.38);
+  --shadow-glow-green: 0 30px 80px -28px rgba(20, 241, 149, 0.32);
+  --shadow-pressed: inset 0 0 0 999px rgba(15, 23, 42, 0.05);
 
   /* Motion */
-  --duration-fast: 120ms;
-  --duration-normal: 220ms;
-  --duration-slow: 420ms;
+  --duration-fast: 140ms;
+  --duration-normal: 280ms;
+  --duration-slow: 480ms;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
   /* Layout */
   --layout-max: 1136px;
   --layout-gutter: clamp(1rem, 0.5rem + 2vw, 2rem);
-  --nav-height: 64px;
+  --nav-height: 72px;
 }
 
 @media (prefers-reduced-motion: reduce) {
